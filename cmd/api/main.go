@@ -1,9 +1,25 @@
+// @title           NEI API
+// @version         1.0
+// @description     API REST para gestión del catálogo de neumáticos agrícolas e industriales.
+// @termsOfService  http://swagger.io/terms/
+
+// @contact.name   Soporte NEI
+// @contact.email  contacto@nei.com
+
+// @host      localhost:8080
+// @BasePath  /api/v1
+
+// @securityDefinitions.apikey BetterAuthSession
+// @in cookie
+// @name better-auth.session_token
+
 package main
 
 import (
 	"log"
 	"os"
 
+	_ "github.com/WhosAnder/nei-api/docs" // generado por swag
 	"github.com/WhosAnder/nei-api/internal/database"
 	"github.com/WhosAnder/nei-api/internal/router"
 	"github.com/gin-gonic/gin"

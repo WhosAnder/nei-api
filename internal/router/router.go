@@ -4,9 +4,13 @@ import (
 	"github.com/WhosAnder/nei-api/internal/handlers"
 	"github.com/WhosAnder/nei-api/internal/middleware"
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func Setup(r *gin.Engine) {
+	// ── Swagger UI (/swagger/index.html) ───────────────────────────────────────
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	// ── Rutas Públicas (lectura del catálogo) ──────────────────────────────────
 	v1 := r.Group("/api/v1")
 	{

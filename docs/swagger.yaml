@@ -1,0 +1,477 @@
+basePath: /api/v1
+definitions:
+  handlers.CategoriaResponse:
+    properties:
+      descripcion:
+        type: string
+      id:
+        type: integer
+      imagen_url:
+        type: string
+      nombre:
+        type: string
+      slug:
+        type: string
+    type: object
+  handlers.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  handlers.MaquinariaResponse:
+    properties:
+      categoria_id:
+        type: integer
+      descripcion:
+        type: string
+      icono_nombre:
+        type: string
+      id:
+        type: integer
+      imagen_url:
+        type: string
+      nombre:
+        type: string
+      slug:
+        type: string
+    type: object
+  handlers.MarcaResponse:
+    properties:
+      id:
+        type: integer
+      logo_url:
+        type: string
+      nombre:
+        type: string
+      slug:
+        type: string
+    type: object
+  handlers.MessageResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  handlers.NeumaticoResponse:
+    properties:
+      id:
+        type: integer
+      imagen_url:
+        type: string
+      maquinaria_id:
+        type: integer
+      marca_id:
+        type: integer
+      medida:
+        type: string
+      nombre:
+        type: string
+      patron:
+        type: string
+      precio:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: contacto@nei.com
+    name: Soporte NEI
+  description: API REST para gestión del catálogo de neumáticos agrícolas e industriales.
+  termsOfService: http://swagger.io/terms/
+  title: NEI API
+  version: "1.0"
+paths:
+  /admin/categorias:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Datos de la categoría
+        in: body
+        name: categoria
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.CategoriaResponse'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/handlers.CategoriaResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BetterAuthSession: []
+      summary: Crear categoría (Admin)
+      tags:
+      - categorias
+  /admin/categorias/{id}:
+    delete:
+      parameters:
+      - description: ID de la categoría
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.MessageResponse'
+      security:
+      - BetterAuthSession: []
+      summary: Eliminar categoría (Admin)
+      tags:
+      - categorias
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID de la categoría
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Datos actualizados
+        in: body
+        name: categoria
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.CategoriaResponse'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.CategoriaResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BetterAuthSession: []
+      summary: Actualizar categoría (Admin)
+      tags:
+      - categorias
+  /admin/maquinaria:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Datos de la maquinaria
+        in: body
+        name: maquinaria
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.MaquinariaResponse'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/handlers.MaquinariaResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BetterAuthSession: []
+      summary: Crear maquinaria (Admin)
+      tags:
+      - maquinaria
+  /admin/maquinaria/{id}:
+    delete:
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.MessageResponse'
+      security:
+      - BetterAuthSession: []
+      summary: Eliminar maquinaria (Admin)
+      tags:
+      - maquinaria
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Datos actualizados
+        in: body
+        name: maquinaria
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.MaquinariaResponse'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.MaquinariaResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BetterAuthSession: []
+      summary: Actualizar maquinaria (Admin)
+      tags:
+      - maquinaria
+  /admin/marcas:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Datos de la marca
+        in: body
+        name: marca
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.MarcaResponse'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/handlers.MarcaResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BetterAuthSession: []
+      summary: Crear marca (Admin)
+      tags:
+      - marcas
+  /admin/marcas/{id}:
+    delete:
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.MessageResponse'
+      security:
+      - BetterAuthSession: []
+      summary: Eliminar marca (Admin)
+      tags:
+      - marcas
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Datos actualizados
+        in: body
+        name: marca
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.MarcaResponse'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.MarcaResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BetterAuthSession: []
+      summary: Actualizar marca (Admin)
+      tags:
+      - marcas
+  /admin/neumaticos:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Datos del neumático
+        in: body
+        name: neumatico
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.NeumaticoResponse'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/handlers.NeumaticoResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BetterAuthSession: []
+      summary: Crear neumático (Admin)
+      tags:
+      - neumaticos
+  /admin/neumaticos/{id}:
+    delete:
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.MessageResponse'
+      security:
+      - BetterAuthSession: []
+      summary: Eliminar neumático (Admin)
+      tags:
+      - neumaticos
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Datos actualizados
+        in: body
+        name: neumatico
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.NeumaticoResponse'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.NeumaticoResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BetterAuthSession: []
+      summary: Actualizar neumático (Admin)
+      tags:
+      - neumaticos
+  /categorias:
+    get:
+      description: Retorna todas las categorías del catálogo (Agrícola, Industrial)
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/handlers.CategoriaResponse'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Listar categorías
+      tags:
+      - categorias
+  /categorias/{id}/maquinaria:
+    get:
+      description: Retorna la lista de maquinaria asociada a una categoría por su
+        slug
+      parameters:
+      - description: 'Slug de la categoría (ej: agricola, industrial)'
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/handlers.MaquinariaResponse'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Maquinaria por categoría
+      tags:
+      - maquinaria
+  /maquinaria/{id}/neumaticos:
+    get:
+      description: Retorna los neumáticos disponibles para una máquina por su slug
+      parameters:
+      - description: 'Slug de la maquinaria (ej: tractor, retroexcavadora)'
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/handlers.NeumaticoResponse'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Neumáticos por maquinaria
+      tags:
+      - neumaticos
+  /marcas:
+    get:
+      description: Retorna todas las marcas de neumáticos disponibles
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/handlers.MarcaResponse'
+            type: array
+      summary: Listar marcas
+      tags:
+      - marcas
+securityDefinitions:
+  BetterAuthSession:
+    in: cookie
+    name: better-auth.session_token
+    type: apiKey
+swagger: "2.0"
