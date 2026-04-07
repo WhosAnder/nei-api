@@ -53,3 +53,12 @@ type ErrorResponse struct {
 type MessageResponse struct {
 	Message string `json:"message"`
 }
+
+// ServicioResponse es la respuesta JSON de un servicio
+type ServicioResponse struct {
+	ID          uint   `json:"id"`
+	Titulo      string `json:"titulo"`
+	Descripcion string `json:"descripcion"`
+	IconoNombre string `json:"icono_nombre"`
+	TextoBoton  string `json:"texto_boton"`
+}

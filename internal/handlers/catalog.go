@@ -231,6 +231,21 @@ func DeleteNeumatico(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Eliminado"})
 }
 
+// ─── Servicios ──────────────────────────────────────────────────────────────────
+
+// GetServicios godoc
+// @Summary      Listar servicios
+// @Description  Retorna todos los servicios disponibles
+// @Tags         servicios
+// @Produce      json
+// @Success      200  {array}  ServicioResponse
+// @Router       /servicios [get]
+func GetServicios(c *gin.Context) {
+	var servicios []models.Servicio
+	database.DB.Find(&servicios)
+	c.JSON(http.StatusOK, servicios)
+}
+
 // ─── Marcas ───────────────────────────────────────────────────────────────────
 
 // GetMarcas godoc
