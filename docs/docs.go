@@ -521,6 +521,20 @@ const docTemplate = `{
                     "categorias"
                 ],
                 "summary": "Listar categorías",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Página (default: 1)",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Elementos por página (default: 20)",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -626,6 +640,20 @@ const docTemplate = `{
                     "marcas"
                 ],
                 "summary": "Listar marcas",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Página (default: 1)",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Elementos por página (default: 20)",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -634,6 +662,55 @@ const docTemplate = `{
                             "items": {
                                 "$ref": "#/definitions/handlers.MarcaResponse"
                             }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/servicios": {
+            "get": {
+                "description": "Retorna todos los servicios disponibles",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "servicios"
+                ],
+                "summary": "Listar servicios",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Página (default: 1)",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Elementos por página (default: 20)",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/handlers.ServicioResponse"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.ErrorResponse"
                         }
                     }
                 }
@@ -745,6 +822,26 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "precio": {
+                    "type": "string"
+                }
+            }
+        },
+        "handlers.ServicioResponse": {
+            "type": "object",
+            "properties": {
+                "descripcion": {
+                    "type": "string"
+                },
+                "icono_nombre": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "texto_boton": {
+                    "type": "string"
+                },
+                "titulo": {
                     "type": "string"
                 }
             }

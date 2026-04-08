@@ -70,6 +70,19 @@ definitions:
       precio:
         type: string
     type: object
+  handlers.ServicioResponse:
+    properties:
+      descripcion:
+        type: string
+      icono_nombre:
+        type: string
+      id:
+        type: integer
+      texto_boton:
+        type: string
+      titulo:
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact:
@@ -387,6 +400,15 @@ paths:
   /categorias:
     get:
       description: Retorna todas las categorías del catálogo (Agrícola, Industrial)
+      parameters:
+      - description: 'Página (default: 1)'
+        in: query
+        name: page
+        type: integer
+      - description: 'Elementos por página (default: 20)'
+        in: query
+        name: limit
+        type: integer
       produces:
       - application/json
       responses:
@@ -457,6 +479,15 @@ paths:
   /marcas:
     get:
       description: Retorna todas las marcas de neumáticos disponibles
+      parameters:
+      - description: 'Página (default: 1)'
+        in: query
+        name: page
+        type: integer
+      - description: 'Elementos por página (default: 20)'
+        in: query
+        name: limit
+        type: integer
       produces:
       - application/json
       responses:
@@ -466,9 +497,41 @@ paths:
             items:
               $ref: '#/definitions/handlers.MarcaResponse'
             type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
       summary: Listar marcas
       tags:
       - marcas
+  /servicios:
+    get:
+      description: Retorna todos los servicios disponibles
+      parameters:
+      - description: 'Página (default: 1)'
+        in: query
+        name: page
+        type: integer
+      - description: 'Elementos por página (default: 20)'
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/handlers.ServicioResponse'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Listar servicios
+      tags:
+      - servicios
 securityDefinitions:
   BetterAuthSession:
     in: cookie

@@ -2,6 +2,7 @@ package router
 
 import (
 	"github.com/WhosAnder/nei-api/internal/handlers"
+	"github.com/WhosAnder/nei-api/internal/middleware"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -21,7 +22,7 @@ func Setup(r *gin.Engine) {
 	}
 
 	// ── Rutas Admin (requieren sesión Better Auth válida) ──────────────────────
-	admin := r.Group("/api/v1/admin")
+	admin := r.Group("/api/v1/admin", middleware.AdminJWTRequired())
 	{
 		// Categorías
 		admin.POST("/categorias", handlers.CreateCategoria)

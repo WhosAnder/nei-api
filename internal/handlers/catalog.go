@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/WhosAnder/nei-api/internal/database"
 	"github.com/WhosAnder/nei-api/internal/models"
@@ -15,12 +16,24 @@ import (
 // @Description  Retorna todas las categorías del catálogo (Agrícola, Industrial)
 // @Tags         categorias
 // @Produce      json
+// @Param        page   query  int  false  "Página (default: 1)"
+// @Param        limit  query  int  false  "Elementos por página (default: 20)"
 // @Success      200  {array}   CategoriaResponse
 // @Failure      500  {object}  ErrorResponse
 // @Router       /categorias [get]
 func GetCategorias(c *gin.Context) {
+	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
+	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "20"))
+	if page < 1 {
+		page = 1
+	}
+	if limit < 1 || limit > 100 {
+		limit = 20
+	}
+	offset := (page - 1) * limit
+
 	var categorias []models.Categoria
-	if err := database.DB.Find(&categorias).Error; err != nil {
+	if err := database.DB.Limit(limit).Offset(offset).Find(&categorias).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -64,8 +77,14 @@ func UpdateCategoria(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Categoría no encontrada"})
 		return
 	}
-	c.ShouldBindJSON(&cat)
-	database.DB.Save(&cat)
+	if err := c.ShouldBindJSON(&cat); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	if err := database.DB.Save(&cat).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 	c.JSON(http.StatusOK, cat)
 }
 
@@ -139,8 +158,14 @@ func UpdateMaquinaria(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Maquinaria no encontrada"})
 		return
 	}
-	c.ShouldBindJSON(&maq)
-	database.DB.Save(&maq)
+	if err := c.ShouldBindJSON(&maq); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	if err := database.DB.Save(&maq).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 	c.JSON(http.StatusOK, maq)
 }
 
@@ -214,8 +239,14 @@ func UpdateNeumatico(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Neumático no encontrado"})
 		return
 	}
-	c.ShouldBindJSON(&neu)
-	database.DB.Save(&neu)
+	if err := c.ShouldBindJSON(&neu); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	if err := database.DB.Save(&neu).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 	c.JSON(http.StatusOK, neu)
 }
 
@@ -238,11 +269,27 @@ func DeleteNeumatico(c *gin.Context) {
 // @Description  Retorna todos los servicios disponibles
 // @Tags         servicios
 // @Produce      json
+// @Param        page   query  int  false  "Página (default: 1)"
+// @Param        limit  query  int  false  "Elementos por página (default: 20)"
 // @Success      200  {array}  ServicioResponse
+// @Failure      500  {object}  ErrorResponse
 // @Router       /servicios [get]
 func GetServicios(c *gin.Context) {
+	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
+	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "20"))
+	if page < 1 {
+		page = 1
+	}
+	if limit < 1 || limit > 100 {
+		limit = 20
+	}
+	offset := (page - 1) * limit
+
 	var servicios []models.Servicio
-	database.DB.Find(&servicios)
+	if err := database.DB.Limit(limit).Offset(offset).Find(&servicios).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 	c.JSON(http.StatusOK, servicios)
 }
 
@@ -253,11 +300,27 @@ func GetServicios(c *gin.Context) {
 // @Description  Retorna todas las marcas de neumáticos disponibles
 // @Tags         marcas
 // @Produce      json
+// @Param        page   query  int  false  "Página (default: 1)"
+// @Param        limit  query  int  false  "Elementos por página (default: 20)"
 // @Success      200  {array}  MarcaResponse
+// @Failure      500  {object}  ErrorResponse
 // @Router       /marcas [get]
 func GetMarcas(c *gin.Context) {
+	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
+	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "20"))
+	if page < 1 {
+		page = 1
+	}
+	if limit < 1 || limit > 100 {
+		limit = 20
+	}
+	offset := (page - 1) * limit
+
 	var marcas []models.Marca
-	database.DB.Find(&marcas)
+	if err := database.DB.Limit(limit).Offset(offset).Find(&marcas).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 	c.JSON(http.StatusOK, marcas)
 }
 
@@ -298,8 +361,14 @@ func UpdateMarca(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Marca no encontrada"})
 		return
 	}
-	c.ShouldBindJSON(&marca)
-	database.DB.Save(&marca)
+	if err := c.ShouldBindJSON(&marca); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	if err := database.DB.Save(&marca).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 	c.JSON(http.StatusOK, marca)
 }
 
