@@ -35,7 +35,7 @@ type Neumatico struct {
 	Patron      string `json:"patron"`
 	Precio      string `json:"precio"`
 	ImagenURL   string `json:"imagen_url"`
-	MarcaID     uint   `json:"marca_id"`
+	MarcaID     *uint  `json:"marca_id"`
 	MaquinariaID uint  `gorm:"not null" json:"maquinaria_id"`
 	Marca       Marca  `gorm:"foreignKey:MarcaID" json:"marca,omitempty"`
 }

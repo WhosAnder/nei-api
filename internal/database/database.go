@@ -16,12 +16,15 @@ var DB *gorm.DB
 func Connect() {
 	// Railway inyecta DATABASE_URL (red privada).
 	// En local, usa DATABASE_PUBLIC_URL o construye desde variables individuales.
+
 	dsn := os.Getenv("DATABASE_URL")
 	if dsn == "" {
+		log.Println("📦 DATABASE_URL no definido, intentando DATABASE_PUBLIC_URL")
 		dsn = os.Getenv("DATABASE_PUBLIC_URL")
 	}
 	if dsn == "" {
 		// Fallback para desarrollo local con variables separadas
+		log.Println("📦 Usando variables PG individuales (desarrollo local)")
 		sslmode := os.Getenv("DB_SSLMODE")
 		if sslmode == "" {
 			sslmode = "disable"
@@ -35,6 +38,8 @@ func Connect() {
 			os.Getenv("PGPORT"),
 			sslmode,
 		)
+	} else {
+		log.Println("📦 Usando DATABASE_URL de Railway")
 	}
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{

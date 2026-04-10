@@ -1,9 +1,25 @@
+// @title           NEI API
+// @version         1.0
+// @description     API REST para gestión del catálogo de neumáticos agrícolas e industriales.
+// @termsOfService  http://swagger.io/terms/
+
+// @contact.name   Soporte NEI
+// @contact.email  contacto@nei.com
+
+// @host      localhost:8080
+// @BasePath  /api/v1
+
+// @securityDefinitions.apikey BetterAuthSession
+// @in cookie
+// @name better-auth.session_token
+
 package main
 
 import (
 	"log"
 	"os"
 
+	_ "github.com/WhosAnder/nei-api/docs" // generado por swag
 	"github.com/WhosAnder/nei-api/internal/database"
 	"github.com/WhosAnder/nei-api/internal/router"
 	"github.com/gin-gonic/gin"
@@ -15,14 +31,17 @@ func main() {
 	// En Railway (production/staging) las variables ya están inyectadas,
 	// godotenv no se ejecuta para no sobreescribir nada.
 	appEnv := os.Getenv("APP_ENV")
-	if appEnv != "production" && appEnv != "staging" {
+	isRailway := os.Getenv("RAILWAY_SERVICE_NAME") != "" // Railway define esto automáticamente
+	if isRailway {
+		log.Println("☁️  Ejecutando en Railway")
+	} else if appEnv == "production" || appEnv == "staging" {
+		log.Printf("☁️  Entorno %s — usando variables inyectadas", appEnv)
+	} else {
 		if err := godotenv.Load(); err != nil {
 			log.Println("⚠️  .env no encontrado — asegúrate de copiar .env.example a .env")
 		} else {
 			log.Println("✅ Variables cargadas desde .env (modo local)")
 		}
-	} else {
-		log.Printf("☁️  Entorno %s — usando variables inyectadas por Railway", appEnv)
 	}
 
 	// Conectar y migrar base de datos

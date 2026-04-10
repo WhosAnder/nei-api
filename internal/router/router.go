@@ -4,21 +4,30 @@ import (
 	"github.com/WhosAnder/nei-api/internal/handlers"
 	"github.com/WhosAnder/nei-api/internal/middleware"
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func Setup(r *gin.Engine) {
+	// ── Swagger UI (/swagger/index.html) ───────────────────────────────────────
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	// ── Rutas Públicas (lectura del catálogo) ──────────────────────────────────
 	v1 := r.Group("/api/v1")
 	{
 		v1.GET("/categorias", handlers.GetCategorias)
 		v1.GET("/categorias/:id/maquinaria", handlers.GetMaquinariaByCat)
+
+		v1.GET("/maquinaria", handlers.GetMaquinarias)
 		v1.GET("/maquinaria/:id/neumaticos", handlers.GetNeumaticosByMaq)
+
+		v1.GET("/neumaticos", handlers.GetNeumaticos)
+
 		v1.GET("/marcas", handlers.GetMarcas)
+		v1.GET("/servicios", handlers.GetServicios)
 	}
 
 	// ── Rutas Admin (requieren sesión Better Auth válida) ──────────────────────
-	admin := r.Group("/api/v1/admin")
-	admin.Use(middleware.AuthRequired())
+	admin := r.Group("/api/v1/admin", middleware.AdminJWTRequired())
 	{
 		// Categorías
 		admin.POST("/categorias", handlers.CreateCategoria)
