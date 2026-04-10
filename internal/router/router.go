@@ -16,7 +16,12 @@ func Setup(r *gin.Engine) {
 	{
 		v1.GET("/categorias", handlers.GetCategorias)
 		v1.GET("/categorias/:id/maquinaria", handlers.GetMaquinariaByCat)
+
+		v1.GET("/maquinaria", handlers.GetMaquinarias)
 		v1.GET("/maquinaria/:id/neumaticos", handlers.GetNeumaticosByMaq)
+
+		v1.GET("/neumaticos", handlers.GetNeumaticos)
+
 		v1.GET("/marcas", handlers.GetMarcas)
 		v1.GET("/servicios", handlers.GetServicios)
 	}

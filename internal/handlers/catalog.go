@@ -22,18 +22,26 @@ import (
 // @Failure      500  {object}  ErrorResponse
 // @Router       /categorias [get]
 func GetCategorias(c *gin.Context) {
-	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
-	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "20"))
-	if page < 1 {
-		page = 1
+	pageStr := c.Query("page")
+	limitStr := c.Query("limit")
+
+	query := database.DB
+
+	if pageStr != "" || limitStr != "" {
+		page, _ := strconv.Atoi(pageStr)
+		limit, _ := strconv.Atoi(limitStr)
+		if page < 1 {
+			page = 1
+		}
+		if limit < 1 || limit > 500 {
+			limit = 20
+		}
+		offset := (page - 1) * limit
+		query = query.Limit(limit).Offset(offset)
 	}
-	if limit < 1 || limit > 100 {
-		limit = 20
-	}
-	offset := (page - 1) * limit
 
 	var categorias []models.Categoria
-	if err := database.DB.Limit(limit).Offset(offset).Find(&categorias).Error; err != nil {
+	if err := query.Find(&categorias).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -56,7 +64,10 @@ func CreateCategoria(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	database.DB.Create(&cat)
+	if err := database.DB.Create(&cat).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 	c.JSON(http.StatusCreated, cat)
 }
 
@@ -100,7 +111,44 @@ func DeleteCategoria(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Eliminado"})
 }
 
-// ─── Maquinaria por Categoría ─────────────────────────────────────────────────
+// ─── Maquinaria ─────────────────────────────────────────────────────────────
+
+// GetMaquinarias godoc
+// @Summary      Listar maquinaria
+// @Description  Retorna toda la maquinaria disponible
+// @Tags         maquinaria
+// @Produce      json
+// @Param        page   query  int  false  "Página (default: 1)"
+// @Param        limit  query  int  false  "Elementos por página (default: 20)"
+// @Success      200  {array}   MaquinariaResponse
+// @Failure      500  {object}  ErrorResponse
+// @Router       /maquinaria [get]
+func GetMaquinarias(c *gin.Context) {
+	pageStr := c.Query("page")
+	limitStr := c.Query("limit")
+
+	query := database.DB
+
+	if pageStr != "" || limitStr != "" {
+		page, _ := strconv.Atoi(pageStr)
+		limit, _ := strconv.Atoi(limitStr)
+		if page < 1 {
+			page = 1
+		}
+		if limit < 1 || limit > 500 {
+			limit = 20
+		}
+		offset := (page - 1) * limit
+		query = query.Limit(limit).Offset(offset)
+	}
+
+	var maquinas []models.Maquinaria
+	if err := query.Find(&maquinas).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, maquinas)
+}
 
 // GetMaquinariaByCat godoc
 // @Summary      Maquinaria por categoría
@@ -137,7 +185,10 @@ func CreateMaquinaria(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	database.DB.Create(&maq)
+	if err := database.DB.Create(&maq).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 	c.JSON(http.StatusCreated, maq)
 }
 
@@ -181,7 +232,44 @@ func DeleteMaquinaria(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Eliminado"})
 }
 
-// ─── Neumáticos por Maquinaria ────────────────────────────────────────────────
+// ─── Neumáticos ───────────────────────────────────────────────────────────────
+
+// GetNeumaticos godoc
+// @Summary      Listar neumáticos
+// @Description  Retorna todos los neumáticos disponibles
+// @Tags         neumaticos
+// @Produce      json
+// @Param        page   query  int  false  "Página (default: 1)"
+// @Param        limit  query  int  false  "Elementos por página (default: 20)"
+// @Success      200  {array}   NeumaticoResponse
+// @Failure      500  {object}  ErrorResponse
+// @Router       /neumaticos [get]
+func GetNeumaticos(c *gin.Context) {
+	pageStr := c.Query("page")
+	limitStr := c.Query("limit")
+
+	query := database.DB
+
+	if pageStr != "" || limitStr != "" {
+		page, _ := strconv.Atoi(pageStr)
+		limit, _ := strconv.Atoi(limitStr)
+		if page < 1 {
+			page = 1
+		}
+		if limit < 1 || limit > 500 {
+			limit = 20
+		}
+		offset := (page - 1) * limit
+		query = query.Limit(limit).Offset(offset)
+	}
+
+	var neumaticos []models.Neumatico
+	if err := query.Find(&neumaticos).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, neumaticos)
+}
 
 // GetNeumaticosByMaq godoc
 // @Summary      Neumáticos por maquinaria
@@ -218,7 +306,15 @@ func CreateNeumatico(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	database.DB.Create(&neu)
+	if err := func() error {
+		if neu.MarcaID != nil && *neu.MarcaID == 0 {
+			neu.MarcaID = nil
+		}
+		return database.DB.Create(&neu).Error
+	}(); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 	c.JSON(http.StatusCreated, neu)
 }
 
@@ -243,7 +339,12 @@ func UpdateNeumatico(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	if err := database.DB.Save(&neu).Error; err != nil {
+	if err := func() error {
+		if neu.MarcaID != nil && *neu.MarcaID == 0 {
+			neu.MarcaID = nil
+		}
+		return database.DB.Save(&neu).Error
+	}(); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -275,18 +376,26 @@ func DeleteNeumatico(c *gin.Context) {
 // @Failure      500  {object}  ErrorResponse
 // @Router       /servicios [get]
 func GetServicios(c *gin.Context) {
-	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
-	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "20"))
-	if page < 1 {
-		page = 1
+	pageStr := c.Query("page")
+	limitStr := c.Query("limit")
+
+	query := database.DB
+
+	if pageStr != "" || limitStr != "" {
+		page, _ := strconv.Atoi(pageStr)
+		limit, _ := strconv.Atoi(limitStr)
+		if page < 1 {
+			page = 1
+		}
+		if limit < 1 || limit > 500 {
+			limit = 20
+		}
+		offset := (page - 1) * limit
+		query = query.Limit(limit).Offset(offset)
 	}
-	if limit < 1 || limit > 100 {
-		limit = 20
-	}
-	offset := (page - 1) * limit
 
 	var servicios []models.Servicio
-	if err := database.DB.Limit(limit).Offset(offset).Find(&servicios).Error; err != nil {
+	if err := query.Find(&servicios).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -306,18 +415,26 @@ func GetServicios(c *gin.Context) {
 // @Failure      500  {object}  ErrorResponse
 // @Router       /marcas [get]
 func GetMarcas(c *gin.Context) {
-	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
-	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "20"))
-	if page < 1 {
-		page = 1
+	pageStr := c.Query("page")
+	limitStr := c.Query("limit")
+
+	query := database.DB
+
+	if pageStr != "" || limitStr != "" {
+		page, _ := strconv.Atoi(pageStr)
+		limit, _ := strconv.Atoi(limitStr)
+		if page < 1 {
+			page = 1
+		}
+		if limit < 1 || limit > 500 {
+			limit = 20
+		}
+		offset := (page - 1) * limit
+		query = query.Limit(limit).Offset(offset)
 	}
-	if limit < 1 || limit > 100 {
-		limit = 20
-	}
-	offset := (page - 1) * limit
 
 	var marcas []models.Marca
-	if err := database.DB.Limit(limit).Offset(offset).Find(&marcas).Error; err != nil {
+	if err := query.Find(&marcas).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -340,7 +457,10 @@ func CreateMarca(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	database.DB.Create(&marca)
+	if err := database.DB.Create(&marca).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 	c.JSON(http.StatusCreated, marca)
 }
 

@@ -9,6 +9,13 @@ import (
 	"github.com/joho/godotenv"
 )
 
+func uintPtr(v uint) *uint {
+	if v == 0 {
+		return nil
+	}
+	return &v
+}
+
 func main() {
 	// Cargar .env en local; en Railway Railway inyecta las vars
 	appEnv := os.Getenv("APP_ENV")
@@ -103,12 +110,12 @@ func main() {
 
 	neumaticos := []models.Neumatico{
 		// Tractor
-		{Nombre: "Neumático agrícola 15.5-38 RTW", Medida: "15.5-38", Patron: "RTW", Precio: "$1,250", ImagenURL: "/images/hero-background.png", MarcaID: marcaMap["seba-ultra"], MaquinariaID: maqMap["tractor"].ID},
-		{Nombre: "Neumático agrícola 18.4-34", Medida: "18.4-34", Patron: "R-1", Precio: "$1,450", ImagenURL: "/images/hero-background.png", MarcaID: marcaMap["firestone"], MaquinariaID: maqMap["tractor"].ID},
-		{Nombre: "Neumático agrícola 16.9-30", Medida: "16.9-30", Patron: "AGRIBIB", Precio: "$1,350", ImagenURL: "/images/hero-background.png", MarcaID: marcaMap["michelin"], MaquinariaID: maqMap["tractor"].ID},
+		{Nombre: "Neumático agrícola 15.5-38 RTW", Medida: "15.5-38", Patron: "RTW", Precio: "$1,250", ImagenURL: "/images/hero-background.png", MarcaID: uintPtr(marcaMap["seba-ultra"]), MaquinariaID: maqMap["tractor"].ID},
+		{Nombre: "Neumático agrícola 18.4-34", Medida: "18.4-34", Patron: "R-1", Precio: "$1,450", ImagenURL: "/images/hero-background.png", MarcaID: uintPtr(marcaMap["firestone"]), MaquinariaID: maqMap["tractor"].ID},
+		{Nombre: "Neumático agrícola 16.9-30", Medida: "16.9-30", Patron: "AGRIBIB", Precio: "$1,350", ImagenURL: "/images/hero-background.png", MarcaID: uintPtr(marcaMap["michelin"]), MaquinariaID: maqMap["tractor"].ID},
 		// Retroexcavadora
-		{Nombre: "Neumático industrial 12.5/80-18", Medida: "12.5/80-18", Patron: "SKS 532", Precio: "$650", ImagenURL: "/images/hero-background.png", MarcaID: marcaMap["camso"], MaquinariaID: maqMap["retroexcavadora"].ID},
-		{Nombre: "Neumático industrial 17.5L-24", Medida: "17.5L-24", Patron: "LD 250", Precio: "$950", ImagenURL: "/images/hero-background.png", MarcaID: marcaMap["titan"], MaquinariaID: maqMap["retroexcavadora"].ID},
+		{Nombre: "Neumático industrial 12.5/80-18", Medida: "12.5/80-18", Patron: "SKS 532", Precio: "$650", ImagenURL: "/images/hero-background.png", MarcaID: uintPtr(marcaMap["camso"]), MaquinariaID: maqMap["retroexcavadora"].ID},
+		{Nombre: "Neumático industrial 17.5L-24", Medida: "17.5L-24", Patron: "LD 250", Precio: "$950", ImagenURL: "/images/hero-background.png", MarcaID: uintPtr(marcaMap["titan"]), MaquinariaID: maqMap["retroexcavadora"].ID},
 	}
 
 	for i := range neumaticos {
