@@ -107,7 +107,7 @@ func UpdateCategoria(c *gin.Context) {
 // @Security     BetterAuthSession
 // @Router       /admin/categorias/{id} [delete]
 func DeleteCategoria(c *gin.Context) {
-	database.DB.Delete(&models.Categoria{}, c.Param("id"))
+	if err := database.DB.Delete(&models.Categoria{}, "id = ?", c.Param("id")).Error; err != nil { c.JSON(500, gin.H{"error": err.Error()}); return }
 	c.JSON(http.StatusOK, gin.H{"message": "Eliminado"})
 }
 
@@ -228,7 +228,7 @@ func UpdateMaquinaria(c *gin.Context) {
 // @Security     BetterAuthSession
 // @Router       /admin/maquinaria/{id} [delete]
 func DeleteMaquinaria(c *gin.Context) {
-	database.DB.Delete(&models.Maquinaria{}, c.Param("id"))
+	if err := database.DB.Delete(&models.Maquinaria{}, "id = ?", c.Param("id")).Error; err != nil { c.JSON(500, gin.H{"error": err.Error()}); return }
 	c.JSON(http.StatusOK, gin.H{"message": "Eliminado"})
 }
 
@@ -359,7 +359,7 @@ func UpdateNeumatico(c *gin.Context) {
 // @Security     BetterAuthSession
 // @Router       /admin/neumaticos/{id} [delete]
 func DeleteNeumatico(c *gin.Context) {
-	database.DB.Delete(&models.Neumatico{}, c.Param("id"))
+	if err := database.DB.Delete(&models.Neumatico{}, "id = ?", c.Param("id")).Error; err != nil { c.JSON(500, gin.H{"error": err.Error()}); return }
 	c.JSON(http.StatusOK, gin.H{"message": "Eliminado"})
 }
 
@@ -500,6 +500,6 @@ func UpdateMarca(c *gin.Context) {
 // @Security     BetterAuthSession
 // @Router       /admin/marcas/{id} [delete]
 func DeleteMarca(c *gin.Context) {
-	database.DB.Delete(&models.Marca{}, c.Param("id"))
+	if err := database.DB.Delete(&models.Marca{}, "id = ?", c.Param("id")).Error; err != nil { c.JSON(500, gin.H{"error": err.Error()}); return }
 	c.JSON(http.StatusOK, gin.H{"message": "Eliminado"})
 }
