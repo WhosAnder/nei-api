@@ -1,22 +1,35 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
+
+// Base es una alternativa a gorm.Model que incluye las etiquetas json correctas
+// para interactuar sin problemas con el frontend en TypeScript.
+type Base struct {
+	ID        uint           `gorm:"primaryKey" json:"id"`
+	CreatedAt time.Time      `json:"created_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at,omitempty"`
+}
 
 // ─── Categoria ────────────────────────────────────────────────────────────────
 
 type Categoria struct {
-	gorm.Model
-	Slug        string      `gorm:"uniqueIndex;not null" json:"slug"`
-	Nombre      string      `gorm:"not null"             json:"nombre"`
-	Descripcion string      `json:"descripcion"`
-	ImagenURL   string      `json:"imagen_url"`
+	Base
+	Slug        string       `gorm:"uniqueIndex;not null" json:"slug"`
+	Nombre      string       `gorm:"not null"             json:"nombre"`
+	Descripcion string       `json:"descripcion"`
+	ImagenURL   string       `json:"imagen_url"`
 	Maquinaria  []Maquinaria `gorm:"foreignKey:CategoriaID" json:"maquinaria,omitempty"`
 }
 
 // ─── Maquinaria ───────────────────────────────────────────────────────────────
 
 type Maquinaria struct {
-	gorm.Model
+	Base
 	Slug        string      `gorm:"uniqueIndex;not null" json:"slug"`
 	Nombre      string      `gorm:"not null"             json:"nombre"`
 	IconoNombre string      `json:"icono_nombre"`
@@ -29,21 +42,21 @@ type Maquinaria struct {
 // ─── Neumatico ────────────────────────────────────────────────────────────────
 
 type Neumatico struct {
-	gorm.Model
-	Nombre      string `gorm:"not null" json:"nombre"`
-	Medida      string `json:"medida"`
-	Patron      string `json:"patron"`
-	Precio      string `json:"precio"`
-	ImagenURL   string `json:"imagen_url"`
-	MarcaID     *uint  `json:"marca_id"`
-	MaquinariaID uint  `gorm:"not null" json:"maquinaria_id"`
-	Marca       Marca  `gorm:"foreignKey:MarcaID" json:"marca,omitempty"`
+	Base
+	Nombre       string `gorm:"not null" json:"nombre"`
+	Medida       string `json:"medida"`
+	Patron       string `json:"patron"`
+	Precio       string `json:"precio"`
+	ImagenURL    string `json:"imagen_url"`
+	MarcaID      *uint  `json:"marca_id"`
+	MaquinariaID uint   `gorm:"not null" json:"maquinaria_id"`
+	Marca        Marca  `gorm:"foreignKey:MarcaID" json:"marca,omitempty"`
 }
 
 // ─── Marca ────────────────────────────────────────────────────────────────────
 
 type Marca struct {
-	gorm.Model
+	Base
 	Slug    string `gorm:"uniqueIndex;not null" json:"slug"`
 	Nombre  string `gorm:"not null"             json:"nombre"`
 	LogoURL string `json:"logo_url"`
@@ -52,7 +65,7 @@ type Marca struct {
 // ─── Servicio ─────────────────────────────────────────────────────────────────
 
 type Servicio struct {
-	gorm.Model
+	Base
 	Titulo      string `gorm:"not null" json:"titulo"`
 	Descripcion string `json:"descripcion"`
 	IconoNombre string `json:"icono_nombre"`
